@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Events.Web.Core;
+using Events.Web.Models;
 
 namespace Events.Web.Controllers
 {
@@ -20,9 +21,9 @@ namespace Events.Web.Controllers
         }
 
         [HttpGet("login")]
-        public ActionResult Login()
+        public ActionResult Login(string returnUrl)
         {
-            return View();
+            return View(new LoginModel { ReturnUrl = returnUrl});
         }
 
         [HttpGet("changepw")]
@@ -30,7 +31,7 @@ namespace Events.Web.Controllers
         {
             return View();
         }
-
+            
         [HttpGet("logout")]
         public ActionResult Logout()
         {
