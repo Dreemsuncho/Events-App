@@ -1,0 +1,28 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	0	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+viewModelHelper	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^   ev.viewModelHelper = function () {$/;"	function	line:11
+showErrors	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^      self.showErrors = function (errors) {$/;"	function	line:16
+self.showErrors	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^      self.showErrors = function (errors) {$/;"	function	line:16
+GET	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^      self.GET = function (url, data, success, failure) {$/;"	function	line:24
+self.GET	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^      self.GET = function (url, data, success, failure) {$/;"	function	line:24
+POST	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^      self.POST = function (url, data, success, failure) {$/;"	function	line:36
+self.POST	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^      self.POST = function (url, data, success, failure) {$/;"	function	line:36
+pushUrlState	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^      self.pushUrlState = function (code, url) {$/;"	function	line:49
+stateInfo.Code	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^         stateInfo = { Code: code, Url: Events.rootPath + url };$/;"	property	line:50
+stateInfo.Url	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^         stateInfo = { Code: code, Url: Events.rootPath + url };$/;"	property	line:50
+self.pushUrlState	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^      self.pushUrlState = function (code, url) {$/;"	function	line:49
+handleUrlState	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^      self.handleUrlState = function (initialState) {$/;"	function	line:54
+self.handleUrlState	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^      self.handleUrlState = function (initialState) {$/;"	function	line:54
+viewModelHelper	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^(function (ev) {$/;"	function	line:10
+init	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^   init: function (element) {$/;"	function	line:72
+ko.bindingHandlers.loadingWhen.init	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^   init: function (element) {$/;"	method	line:72
+update	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^   update: function (element, valueAccessor) {$/;"	function	line:98
+ko.bindingHandlers.loadingWhen.update	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^   update: function (element, valueAccessor) {$/;"	method	line:98
+init	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^    init: function(element, valueAccessor) {$/;"	function	line:128
+ko.bindingHandlers.fadeVisible.init	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^    init: function(element, valueAccessor) {$/;"	method	line:128
+update	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^    update: function(element, valueAccessor) {$/;"	function	line:136
+ko.bindingHandlers.fadeVisible.update	D:\work\dotNET\Events-App\Events-App\Events.Web\wwwroot\Scripts\App.js	/^    update: function(element, valueAccessor) {$/;"	method	line:136
