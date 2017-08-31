@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
 using Events.Web.Core;
@@ -20,55 +17,55 @@ namespace Events.Web.Adapters
             _signInManager = signInManager;
         }
 
-        public bool Login(string loginEmail, string password, bool rememberMe)
+        public async Task<bool> Login(string loginEmail, string password, bool rememberMe)
         {
-            Account user = _FindUserByUsername(loginEmail);
-
-            var signInResult = Task.Run(() => _signInManager.PasswordSignInAsync(user, password, rememberMe, false)).Result;
+            var signInResult = await _signInManager.PasswordSignInAsync(loginEmail, password, rememberMe, false);
 
             return signInResult.Succeeded;
         }
 
-        public bool Register(string loginEmail, string firstName, string lastName, string password)
+        public async Task<bool> Register(string loginEmail, string firstName, string lastName, string password)
         {
             var newUser = new Account { UserName = loginEmail, FirstName = firstName, LastName = lastName };
 
-            var result = Task.Run(() => _userManager.CreateAsync(newUser, password)).Result;
+            var result = await _userManager.CreateAsync(newUser, password);
 
             return result.Succeeded;
         }
 
-        public bool UserExists(string loginEmail)
+        public async Task<bool> UserExists(string loginEmail)
         {
-            var task = Task.Run(() => _userManager.FindByNameAsync(loginEmail)).Result;
+            var user = await _FindByNameAsync(loginEmail);
 
-            return (task != null);
+            return (user != null);
         }
 
-        public bool CheckPassword(string loginEmail, string password)
+        public async Task<bool> CheckPassword(string loginEmail, string password)
         {
-            Account user = _FindUserByUsername(loginEmail);
+            Account user = await _FindByNameAsync(loginEmail);
 
-            var result = Task.Run(() => _signInManager.CheckPasswordSignInAsync(user, password, false)).Result;
+            var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
 
             return result.Succeeded;
         }
 
-        public bool ChangePassword(Account user, string oldPassword, string newPassword)
+        public async Task<bool> ChangePassword(string loginEmail, string oldPassword, string newPassword)
         {
-            var result = Task.Run(() => _userManager.ChangePasswordAsync(user, oldPassword, newPassword)).Result;
+            Account user = await _FindByNameAsync(loginEmail);
+
+            var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
 
             return result.Succeeded;
         }
 
-        public void Logout()
+        public async Task Logout()
         {
-            Task.Run(() => _signInManager.SignOutAsync());
+            await _signInManager.SignOutAsync();
         }
 
-        private Account _FindUserByUsername(string loginEmail)
+        private async Task<Account> _FindByNameAsync(string loginEmail)
         {
-            return Task.Run(() => _userManager.FindByNameAsync(loginEmail)).Result;
+            return await _userManager.FindByNameAsync(loginEmail);
         }
     }
 }

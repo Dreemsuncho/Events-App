@@ -11,12 +11,20 @@
       self.step1 = ko.observable(new Events.RegisterModelStep1());
       self.step2 = ko.observable(new Events.RegisterModelStep2());
 
+      self.prevStep = function () {
+         if (self.viewMode() === 'step2')
+            self.viewMode('step1');
+         else
+            self.viewMode('step2');
+      };
+
       self.nextStep = function (model) {
          let errors = ko.validation.group(model);
          let isValid = errors().length === 0;
-         let unmappedModel = ko.toJS(model);
 
          if (isValid) {
+            let unmappedModel = ko.toJS(model);
+
             if (self.viewMode() === 'step1') {
                self.viewModelHelper.POST('api/account/register/validate1', unmappedModel, function (result) {
                   self.viewMode('step2');
@@ -37,7 +45,7 @@
          unmappedModel = $.extend(unmappedModel, ko.toJS(self.step2))
 
          self.viewModelHelper.POST('api/account/register', unmappedModel, function (result) {
-            window.location.href = Events.rootPath;
+            window.location.href = Events.rootPath + `?Welcome ${result}!`;
          });
       };
 

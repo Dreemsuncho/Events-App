@@ -2,8 +2,8 @@ window.Events = {};
 
 (function (ev) {
    ev.rootPath = '';
-   ev.emailPattern = /.*@.*\..*/g;``
-   ev.emailPatternMessage = 'Login email must contains \'@\', \'.\', symbols successively';
+   ev.emailPattern = /[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+/;
+   ev.emailPatternMessage = 'Login email is invalid';
    ev.mustEqual = (val, other) => val === other;
    ev.mustMatch = (val, regex) => regex.test(val);
 }(window.Events));
@@ -18,6 +18,8 @@ window.Events = {};
          if (errors)
             errors.forEach(e => toastr.error(e));
       };
+
+
 
       self.isValid = ko.observable(true);
       self.errors = ko.observableArray();
@@ -126,17 +128,27 @@ ko.bindingHandlers.loadingWhen = {
 // Here's a custom Knockout binding that makes elements shown/hidden via jQuery's fadeIn()/fadeOut() methods
 // Could be stored in a separate utility library
 ko.bindingHandlers.fadeVisible = {
-    init: function(element, valueAccessor) {
-      console.log(valueAccessor());
-      console.log(valueAccessor);
-        // Initially set the element to be instantly visible/hidden depending on the value
-        var value = ko.utils.unwrapObservable(valueAccessor());
-        // Use "unwrapObservable" so we can handle values that may or may not be observable
-        $(element).toggle(ko.unwrap(value));
-    },
-    update: function(element, valueAccessor) {
-        // Whenever the value subsequently changes, slowly fade the element in or out
-        var value = valueAccessor();
-        ko.unwrap(value) ? $(element).fadeIn('slow') : $(element).hide();
-    }
+   init: function (element, valueAccessor) {
+      // Initially set the element to be instantly visible/hidden depending on the value
+      var value = ko.utils.unwrapObservable(valueAccessor());
+      // Use "unwrapObservable" so we can handle values that may or may not be observable
+      $(element).toggle(ko.unwrap(value));
+   },
+   update: function (element, valueAccessor) {
+      // Whenever the value subsequently changes, slowly fade the element in or out
+      var value = valueAccessor();
+      ko.unwrap(value) ? $(element).fadeIn('slow') : $(element).hide();
+   }
 };
+
+// this code is executed when must show success message after redirect.
+$(function () {
+   let params = window.location.href.split('?');
+
+   if (params.length > 1) {
+     // then clear the url for prevent another refresh and shows message again.
+      toastr.options.onHidden = function () { window.location.href = Events.rootPath; };
+
+      toastr.success(params[1].replace(/%20/g, " "));
+   };
+});

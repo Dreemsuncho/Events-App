@@ -8,11 +8,11 @@ namespace Events.Web.Core
 {
     public interface ISecurityAdapter
     {
-        bool Login(string loginEmail, string password, bool rememberMe);
-        bool Register(string loginEmail, string firstName, string lastName, string password);
-        bool UserExists(string loginEmail);
-        bool CheckPassword(string loginEmail, string password);
-        bool ChangePassword(Account user, string oldPassword, string newPassword);
-        void Logout();
+        Task<bool> Login(string loginEmail, string password, bool rememberMe);
+        Task<bool> Register(string loginEmail, string firstName, string lastName, string password);
+        Task<bool> UserExists(string loginEmail);
+        Task<bool> CheckPassword(string loginEmail, string password);
+        Task<bool> ChangePassword(string loginEmail, string oldPassword, string newPassword);
+        Task Logout();
     }
 }

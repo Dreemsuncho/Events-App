@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Events.Web.Core;
 using Events.Web.Models;
+using System.Threading.Tasks;
 
 namespace Events.Web.Controllers
 {
@@ -36,14 +37,14 @@ namespace Events.Web.Controllers
         }
 
         [HttpPost("register/validate2")]
-        public ActionResult RegisterValidation2(RegisterModel model)
+        public async Task<ActionResult> RegisterValidation2(RegisterModel model)
         {
             var errors = new List<string>();
 
             if (string.IsNullOrWhiteSpace(model.LoginEmail))
                 errors.Add("Login email is invalid");
 
-            if (_securityAdapter.UserExists(model.LoginEmail))
+            if (await _securityAdapter.UserExists(model.LoginEmail))
                 errors.Add("User with same 'Login Email' exist");
 
             if (!Regex.IsMatch(model.LoginEmail, @".*@.*\..*"))
@@ -62,31 +63,28 @@ namespace Events.Web.Controllers
         }
 
         [HttpPost("register")]
-        public ActionResult Register(RegisterModel model)
+        public async Task<ActionResult> Register(RegisterModel model)
         {
-            ActionResult response = null;
-
             bool registerSuccess = false;
 
             if (RegisterValidation1(model) is OkResult &&
-                RegisterValidation2(model) is OkResult)
-            {
-                registerSuccess = _securityAdapter.Register(model.LoginEmail, model.FirstName, model.LastName, model.Password);
+                await RegisterValidation2(model) is OkResult)
+                registerSuccess = await _securityAdapter.Register(model.LoginEmail, model.FirstName, model.LastName, model.Password);
 
-                if (registerSuccess)
-                    _securityAdapter.Login(model.LoginEmail, model.Password, false);
-            }
 
             if (registerSuccess)
-                response = Ok();
+            {
+                await _securityAdapter.Login(model.LoginEmail, model.Password, model.RememberMe);
+                return Ok(model.LoginEmail);
+            }
             else
-                response = BadRequest(new[] { $"Unable to register user" });
-
-            return response;
+            {
+                return BadRequest(new[] { "Unable to register user" });
+            }
         }
 
         [HttpPost("login")]
-        public ActionResult Login(LoginModel model)
+        public async Task<ActionResult> Login(LoginModel model)
         {
             var errors = new List<string>();
 
@@ -99,28 +97,44 @@ namespace Events.Web.Controllers
             if (model.Password.Length < 1)
                 errors.Add("Password must be at least 1 symbol");
 
-            if (model.Password != model.ConfirmPassword)
-                errors.Add("Passwords do not match");
-
-            if (!_securityAdapter.UserExists(model.LoginEmail) ||
-                !_securityAdapter.CheckPassword(model.LoginEmail, model.Password))
+            if (!await _securityAdapter.UserExists(model.LoginEmail) ||
+                !await _securityAdapter.CheckPassword(model.LoginEmail, model.Password))
                 errors.Add("Invalid username or password");
 
-            bool isLoggedIn = false;
+            bool loginSuccess = false;
 
             if (!errors.Any())
-                isLoggedIn = _securityAdapter.Login(model.LoginEmail, model.Password, false);
+                loginSuccess = await _securityAdapter.Login(model.LoginEmail, model.Password, model.RememberMe);
 
-            if (isLoggedIn)
-                return Ok();
+            if (loginSuccess)
+                return Ok(model.LoginEmail);
             else
                 return BadRequest(errors);
         }
 
-        //[HttpPost]
-        //public ActionResult ChangePassword(string passkk)
-        //{
+        [HttpPost("chpassword")]
+        public async Task<ActionResult> ChangePassword(ChangePasswordModel model)
+        {
+            var errors = new List<string>();
 
-        //}
+            if (!await _securityAdapter.CheckPassword(User.Identity.Name, model.OldPassword))
+                errors.Add("Old password is incorrect");
+
+            if (string.IsNullOrWhiteSpace(model.NewPassword))
+                errors.Add("New password is invalid");
+
+            if (model.NewPassword != model.ConfirmPassword)
+                errors.Add("Passwords do not match");
+
+            bool changePasswordSuccess = false;
+
+            if (!errors.Any())
+                changePasswordSuccess = await _securityAdapter.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
+
+            if (changePasswordSuccess)
+                return Ok();
+            else
+                return BadRequest(errors);
+        }
     }
 }

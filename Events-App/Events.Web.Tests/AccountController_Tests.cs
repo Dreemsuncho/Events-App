@@ -41,13 +41,13 @@ namespace Events.Web.Tests
             // Assert
             Assert.IsType<ViewResult>(result);
 
-            var viewResult = (result as ViewResult);
+            var viewResult = result as ViewResult;
 
             Assert.IsType<LoginModel>(viewResult.Model);
         }
 
         [Fact]
-        public void Logout()
+        public async void Logout()
         {
             // Arrange
             var securityAdapter = new Mock<ISecurityAdapter>();
@@ -57,9 +57,9 @@ namespace Events.Web.Tests
             var httpContext = new DefaultHttpContext { Session = session.Object };
 
             controller.ControllerContext = new ControllerContext { HttpContext = httpContext };
-
+            
             // Act
-            var result = controller.Logout();
+            var result = await controller.Logout();
 
             // Assert
             securityAdapter.Verify(x => x.Logout(), Times.Once);
@@ -75,7 +75,7 @@ namespace Events.Web.Tests
             var controller = new AccountController(securityAdapter.Object);
 
             // Act
-            var result =controller.ChangePassword();
+            var result = controller.ChangePassword();
 
             // Assert
             Assert.IsType<ViewResult>(result);

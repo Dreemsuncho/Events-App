@@ -1,0 +1,15 @@
+﻿{
+	"version": "1.0.0",
+	"name": "events-web",
+	"private": true,
+	"devDependencies": {
+	},
+	"dependencies": {
+		"mdbootstrap": "^4.4.1",
+		"font-awesome": "^4.7.0",
+		"knockout": "^3.4.2",
+		"jquery": "^3.2.1",
+		"knockout.validation": "^2.0.3",
+		"toastr": "^2.1.2"
+	}
+}

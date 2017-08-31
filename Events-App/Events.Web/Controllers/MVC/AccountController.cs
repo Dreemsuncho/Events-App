@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Events.Web.Core;
 using Events.Web.Models;
 
@@ -33,11 +34,11 @@ namespace Events.Web.Controllers
         }
             
         [HttpGet("logout")]
-        public ActionResult Logout()
+        public async Task<ActionResult> Logout()
         {
             HttpContext.Session.Clear();    
-            _securityAdapter.Logout();
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            await _securityAdapter.Logout();
+            return  RedirectToAction(nameof(HomeController.Index), "Home");
         }
     }
 }

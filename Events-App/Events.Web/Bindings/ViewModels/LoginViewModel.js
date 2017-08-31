@@ -13,8 +13,8 @@
          if (isValid) {
             let unmappedModel = ko.toJS(model);
 
-            self.viewModelHelper.POST('api/account/login', unmappedModel, function () {
-               window.location.href = Events.rootPath;
+            self.viewModelHelper.POST('api/account/login', unmappedModel, function (result) {
+              window.location.href = Events.rootPath + `?Welcome ${result}!`;
             });
          } else {
             self.viewModelHelper.showErrors(errors());
