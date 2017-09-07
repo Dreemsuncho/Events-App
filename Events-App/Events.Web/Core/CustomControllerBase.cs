@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Events.Web.Core
 {
     public class CustomControllerBase : Controller
     {
+        protected const int _pageSize = 6;
     }
 }

@@ -15,7 +15,7 @@
             let unmappedModel = ko.toJS(model);
 
             self.viewModelHelper.POST("api/account/chpassword", unmappedModel, function () {
-               window.location.href = Events.rootPath + '?Success change your password';
+               window.location.href = Events.rootPath + '??Success change your password';
             });
          } else {
             self.viewModelHelper.showErrors(errors());

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Events.Data.Contracts;
 
 namespace Events.Data.Entities
 {
-    public class Event
+    public class Event : IEntity
     {
         public Event()
         {
@@ -18,7 +19,7 @@ namespace Events.Data.Entities
         public TimeSpan Duration { get; set; }
         public string AuthorId { get; set; }
         public Account Author { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime StartDate { get; set; }
         public bool IsPublic { get; set; }
         public ICollection<Comment> Comments { get; set; }
     }

@@ -1,8 +1,9 @@
 ﻿using System;
+using Events.Data.Contracts;
 
 namespace Events.Data.Entities
 {
-    public class Comment
+    public class Comment: IEntity
     {
         public Comment()
         {

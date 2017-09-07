@@ -5,21 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Properties\PublishProfiles\elvis-events - Web Deploy.pubxml" />
-    <None Remove="Properties\PublishProfiles\events-application - Web Deploy.pubxml" />
-    <None Remove="Properties\PublishProfiles\Tests-App - Web Deploy.pubxml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Events.Data\Events.Data.csproj" />
   </ItemGroup>
-
+  
   <ItemGroup>
-    <Folder Include="Properties\PublishProfiles\" />
+    <Content Include="Bindings\**\*" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="node_modules\**\*" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
-
+  
 </Project>

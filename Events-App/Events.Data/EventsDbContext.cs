@@ -1,17 +1,23 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Events.Data.Entities;
+using Events.Data.Configuration;
+using System.Linq;
+using System;
 
 namespace Events.Data
 {
     public class EventsDbContext : IdentityDbContext<Account>
     {
         public EventsDbContext(DbContextOptions<EventsDbContext> options)
-            : base(options) { }
+            : base(options)
+        {
+            Database.EnsureCreated();
+        }
 
-        public DbSet<Account> AccountSet { get; }
-        public DbSet<Event> EventSet { get; }
-        public DbSet<Comment> CommentSet { get; }
+        public DbSet<Account> AccountSet { get; set; }
+        public DbSet<Event> EventSet { get; set; }
+        public DbSet<Comment> CommentSet { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -20,6 +26,10 @@ namespace Events.Data
             builder.Entity<Account>().ToTable("AccountSet");
             builder.Entity<Event>().ToTable("EventSet");
             builder.Entity<Comment>().ToTable("CommentSet");
+
+            builder.ApplyConfiguration(new AccountConfig());
+            builder.ApplyConfiguration(new CommentConfig());
+            builder.ApplyConfiguration(new EventConfig());
         }
     }
 }

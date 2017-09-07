@@ -9,7 +9,6 @@ using Events.Web.Core;
 using Events.Web.Models;
 using System.Threading.Tasks;
 using System;
-using Events.Data.Entities;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 

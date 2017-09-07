@@ -1,4 +1,12 @@
-﻿using Microsoft.Extensions.FileProviders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+
+using Events.Data;
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Events.Data.Entities;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -26,6 +34,19 @@ namespace Microsoft.AspNetCore.Builder
                 FileProvider = fileProvider,
                 RequestPath = node_modules
             });
+        }
+
+        public async static Task InitialzieDatabase(this IApplicationBuilder app, IServiceProvider serviceProvider)
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var scopeService = scope.ServiceProvider;
+
+                var userManager = scopeService.GetRequiredService<UserManager<Account>>();
+                var context = scopeService.GetRequiredService<EventsDbContext>();
+
+                await DbInitializer.Initialize(userManager, context);
+            }
         }
     }
 }

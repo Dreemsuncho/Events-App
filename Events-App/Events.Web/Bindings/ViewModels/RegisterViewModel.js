@@ -45,7 +45,7 @@
          unmappedModel = $.extend(unmappedModel, ko.toJS(self.step2))
 
          self.viewModelHelper.POST('api/account/register', unmappedModel, function (result) {
-            window.location.href = Events.rootPath + `?Welcome ${result}!`;
+            window.location.href = Events.rootPath + `??Welcome ${result}!`;
          });
       };
 

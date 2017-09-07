@@ -9,6 +9,9 @@ using Events.Web.Core;
 using Events.Web.Adapters;
 using Events.Data;
 using Events.Data.Entities;
+using Events.Data.Contracts;
+using Events.Data.Factories;
+using Events.Data.Repositories;
 
 namespace Events.Web
 {
@@ -23,7 +26,10 @@ namespace Events.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<EventsDbContext>(options => options.UseInMemoryDatabase("InMemory"));
+            services.AddTransient<IDataRepositoryFactory, DataRepositoryFactory>();
+            services.AddTransient<EventsRepository>();
+
+            services.AddDbContext<EventsDbContext>(options => options.UseSqlServer(Config.GetConnectionString("Events")));
 
             services.AddIdentity<Account, IdentityRole>()
                 .AddEntityFrameworkStores<EventsDbContext>()
@@ -36,11 +42,9 @@ namespace Events.Web
             services.AddSession();
 
             services.AddMvc();
-
-            services.AddScoped<IDbInitializer, DbInitializer>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDbInitializer dbInitializer)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -59,7 +63,7 @@ namespace Events.Web
 
             app.UseMvcWithDefaultRoute();
 
-            dbInitializer.Initialize();
-        }
+            await app.InitialzieDatabase(app.ApplicationServices);
+        }   
     }
 }

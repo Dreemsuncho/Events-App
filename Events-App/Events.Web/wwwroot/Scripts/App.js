@@ -1,6 +1,16 @@
 window.Events = {};
 
 (function (ev) {
+   let z = 6;
+   let refreshDraggable = function () {
+      $('.dtp-content').addClass('draggable');
+      $('.draggable').mousedown(function (ev) { $(this).css('z-index', z++); });
+      $('.draggable').draggable();
+   };
+   ev.refreshDragabble = refreshDraggable;
+}(window.Events));
+
+(function (ev) {
    ev.rootPath = '';
    ev.emailPattern = /[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+/;
    ev.emailPatternMessage = 'Login email is invalid';
@@ -19,8 +29,6 @@ window.Events = {};
             errors.forEach(e => toastr.error(e));
       };
 
-
-
       self.isValid = ko.observable(true);
       self.errors = ko.observableArray();
 
@@ -33,6 +41,7 @@ window.Events = {};
             })
             .always(function () {
                self.isLoading(false);
+               Events.refreshDragabble();
             });
       };
 
@@ -45,6 +54,7 @@ window.Events = {};
             })
             .always(function () {
                self.isLoading(false);
+               Events.refreshDragabble();
             });
       };
 
@@ -143,10 +153,10 @@ ko.bindingHandlers.fadeVisible = {
 
 // this code is executed when must show success message after redirect.
 $(function () {
-   let params = window.location.href.split('?');
+   let params = window.location.href.split('??');
 
    if (params.length > 1) {
-     // then clear the url for prevent another refresh and shows message again.
+      // then clear the url for prevent another refresh and shows message again.
       toastr.options.onHidden = function () { window.location.href = Events.rootPath; };
 
       toastr.success(params[1].replace(/%20/g, " "));
