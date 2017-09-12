@@ -86,6 +86,8 @@ namespace Events.Web.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login(LoginModel model)
         {
+            ActionResult response = null;
+
             var errors = new List<string>();
 
             if (string.IsNullOrWhiteSpace(model.LoginEmail))
@@ -107,9 +109,11 @@ namespace Events.Web.Controllers
                 loginSuccess = await _securityAdapter.Login(model.LoginEmail, model.Password, model.RememberMe);
 
             if (loginSuccess)
-                return Ok(model.LoginEmail);
+                response = Ok(new { model.LoginEmail, model.ReturnUrl });
             else
-                return BadRequest(errors);
+                response = BadRequest(errors);
+
+            return response;
         }
 
         [HttpPost("chpassword")]

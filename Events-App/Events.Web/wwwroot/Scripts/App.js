@@ -12,8 +12,9 @@ window.Events = {};
 
 (function (ev) {
    ev.rootPath = '';
+   ev.infoMessage = '';
    ev.emailPattern = /[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+/;
-   ev.emailPatternMessage = 'Login email is invalid';
+   ev.emailPatternMessage = 'Login email is invalid, must match (a-z)@(a-z).(a-z)';
    ev.mustEqual = (val, other) => val === other;
    ev.mustMatch = (val, regex) => regex.test(val);
 }(window.Events));
@@ -157,8 +158,7 @@ $(function () {
 
    if (params.length > 1) {
       // then clear the url for prevent another refresh and shows message again.
-      toastr.options.onHidden = function () { window.location.href = Events.rootPath; };
-
+      toastr.options.onHidden = function () { history.pushState(null, null, params[0]); };
       toastr.success(params[1].replace(/%20/g, " "));
    };
 });

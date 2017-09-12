@@ -7,13 +7,10 @@ using System;
 
 namespace Events.Data
 {
-    public class EventsDbContext : IdentityDbContext<Account>
+    public class EventsDbContext : IdentityDbContext<Account, ApplicationRole, Guid>
     {
         public EventsDbContext(DbContextOptions<EventsDbContext> options)
-            : base(options)
-        {
-            Database.EnsureCreated();
-        }
+            : base(options) { }
 
         public DbSet<Account> AccountSet { get; set; }
         public DbSet<Event> EventSet { get; set; }

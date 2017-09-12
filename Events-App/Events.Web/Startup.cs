@@ -12,6 +12,8 @@ using Events.Data.Entities;
 using Events.Data.Contracts;
 using Events.Data.Factories;
 using Events.Data.Repositories;
+using System.Threading.Tasks;
+using Events.Web.Controllers;
 
 namespace Events.Web
 {
@@ -28,14 +30,26 @@ namespace Events.Web
         {
             services.AddTransient<IDataRepositoryFactory, DataRepositoryFactory>();
             services.AddTransient<EventsRepository>();
+            services.AddTransient<AccountRepository>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddDbContext<EventsDbContext>(options => options.UseSqlServer(Config.GetConnectionString("Events")));
+            //services.AddDbContext<EventsDbContext>(options => options.UseInMemoryDatabase("InMemory"));
 
-            services.AddIdentity<Account, IdentityRole>()
+            services.AddIdentity<Account, ApplicationRole>()
                 .AddEntityFrameworkStores<EventsDbContext>()
                 .AddDefaultTokenProviders();
 
             services.ConfigureIdentity();
+
+            services.AddAuthorization(o =>
+            {
+                o.AddPolicy("Managers", policy => policy.RequireClaim("Admins", "Administrator"));
+                o.AddPolicy("Users", policy => policy.RequireClaim("Users", "User"));
+            });
+
+            services.ConfigureApplicationCookie(config => config.LoginPath = "/account/login");
 
             services.AddScoped<ISecurityAdapter, SecurityAdapter>();
 
@@ -51,19 +65,21 @@ namespace Events.Web
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseDeveloperExceptionPage();
+
             app.UseFileServer();
 
             app.UseNodeModulesFolder(env.ContentRootPath);
 
             app.UseKnockoutBindings(env.ContentRootPath);
 
-            app.UseAuthentication();
-
             app.UseSession();
 
-            app.UseMvcWithDefaultRoute();
+            app.UseAuthentication();
 
             await app.InitialzieDatabase(app.ApplicationServices);
-        }   
+
+            app.UseMvcWithDefaultRoute();
+        }
     }
 }

@@ -1,6 +1,10 @@
 ﻿@model Events.Web.Models.IndexModel
 @{
     ViewBag.Name = "Home";
+    ViewBag.Title = "Events";
+}
+@section styles{
+    <link href="~/Styles/Index.css" rel="stylesheet" />
 }
 @section scripts {
     <script src="~/Bindings/Models/IndexModel.js" type="text/javascript"></script>
@@ -10,11 +14,15 @@
     let eventsArray = @Json.Serialize(Model.Events);
 
     let viewModel = new Events.IndexViewModel(@Model.Page, eventsArray);
+    var eventDetailsViewModel = new Events.EventDetailsViewModel();
+
     ko.applyBindings(viewModel, $('#index')[0]);
+    ko.applyBindings(eventDetailsViewModel, $('#comment-form')[0]);
 }
 
 <div id="index">
-    <h1 align="middle"> Events </h1>
+    <h1 align="middle">@ViewBag.Title</h1>
+
     <div data-bind="with: model" class="md-form col-md-4 draggable">
         <input data-bind="value: Date" type="text" id="date-picker" class="form-control datepicker">
         <label class="fa fa-calendar-minus-o" for="date-picker">&nbsp;&nbsp;Show after...</label>
@@ -24,13 +32,15 @@
         <div data-bind="visible: isVisible()">
 
             <div data-bind="foreach: model.Events">
-                <div class="card draggable" style="width:31%; margin:1%; display:inline-block">
-                    <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20%282%29.jpg" alt="Card image cap">
+                <div class="card event-body draggable">
+                    <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20%282%29.jpg">
 
                     <div class="card-body">
-                        <h5 data-bind="text: title" class="card-title"></h5>
-                        <p data-bind="text: description.substring(0, 45) + '...'" class="card-text"></p>
-                        <a href="#" class="btn btn-sm btn-primary">Show details</a>
+                        <div data-bind="fadeVisible: !detailsIsVisible()">
+                            <p data-bind="text: description.substring(0, 45) + '...'" class="card-text"></p>
+                            <a data-bind="click: $parent.toggleDetails" class="btn btn-sm btn-primary">Show details</a>
+                        </div>
+                        <section data-bind="fadeVisible:detailsIsVisible(), template: { name: 'details-body' }"/>
                     </div>
                 </div>
             </div>
@@ -41,11 +51,48 @@
         </div>
     </section>
 
-    <br />
-    <br />
-
-    <section class="flex-center">
-        <button data-bind="click: prevPage, enable: model.Page() > 0 && !viewModelHelper.isLoading()" class="btn btn-sm btn-blue-grey"><i style="font-size:17px">«</i>&nbsp;&nbsp;Prev</button>
-        <button data-bind="click: nextPage, enable: model.Events().length == 6 && !viewModelHelper.isLoading()" class="btn btn-sm btn-blue">Next&nbsp;<i style="font-size:17px">»</i></button>
-    </section>
+    <section data-bind="template:{ name: 'next-prev-template'}" class="flex-center next-prev-section" />
 </div>
+
+<script type="text/html" id="details-body">
+    <p data-bind="text: description" class="card-text"></p>
+
+    <ul class="event-details small list-unstyled">
+        <li><strong>Author:&nbsp;</strong><span data-bind="text: author.firstName + ' ' + author.lastName" /></li>
+        <li><strong>Location:&nbsp;</strong><span data-bind="text: location" /></li>
+        <li><strong>Date:&nbsp;</strong><span data-bind="text: new Date(startDate).toLocaleDateString()" /></li>
+        <li><strong>Duration:&nbsp;</strong><span data-bind="text: duration" /></li>
+    </ul>
+
+    <p data-bind="text: comments.length == 0 ? 'No comments:' : 'Comments:'" />
+
+    <ul data-bind="foreach: comments, attr: { id: id }" class="small">
+        <li>
+            <strong data-bind="text: (author ? author.firstName : 'Anonymous') + ' says:'"></strong>
+            <i data-bind="text: text" class="light-blue"></i>
+            <p data-bind="text: 'Published: ' + new Date(date).toLocaleDateString()" />
+        </li>
+    </ul>
+
+    <button data-bind="fadeVisible: !commentFormVisible(), click: $parent.toggleCommentForm" class="btn btn-sm">Add comments</button>
+    <section data-bind="fadeVisible: commentFormVisible(), template: { name: 'comment-form' }"></section>
+</script>
+
+<script type="text/html" id="comment-form">
+    <form class="md-form small">
+        <input data-bind="value: $parent.eventDetails.commentText" type="text" />
+        <label for="text-message"><small>Text message</small></label>
+        <a data-bind="click: $parent.eventDetails.createComment" class="small fa fa-paper-plane">&nbsp;Send</a>
+        <a data-bind="click: $parent.toggleCommentForm" class="small">&nbsp;Cancel</a>
+    </form>
+</script>
+
+<script type="text/html" id="next-prev-template">
+    <button data-bind="click: prevPage, enable: model.Page() > 0 && !viewModelHelper.isLoading()" class="btn btn-sm btn-blue-grey">
+        <i style="font-size:17px">«</i>&nbsp;&nbsp;Prev
+    </button>
+
+    <button data-bind="click: nextPage, enable: model.Events().length == 6 && !viewModelHelper.isLoading()" class="btn btn-sm btn-blue">
+        Next&nbsp;<i style="font-size:17px">»</i>
+    </button>
+</script>

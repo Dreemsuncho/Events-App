@@ -9,7 +9,6 @@ namespace Events.Data.Configuration
         public void Configure(EntityTypeBuilder<Comment> builder)
         {
             builder.Property(x => x.Text).HasMaxLength(200).IsRequired();
-            builder.Property(x => x.EventId).IsRequired();
         }
     }
 }

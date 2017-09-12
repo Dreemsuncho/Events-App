@@ -1,5 +1,5 @@
 (function (ev) {
-   let LoginViewModel = function () {
+   let LoginViewModel = function (returnUrl) {
 
       let self = this;
 
@@ -12,10 +12,12 @@
 
          if (isValid) {
             let unmappedModel = ko.toJS(model);
+            $.extend(unmappedModel, { returnUrl: returnUrl });
 
             self.viewModelHelper.POST('api/account/login', unmappedModel, function (result) {
-              window.location.href = Events.rootPath + `??Welcome ${result}!`;
-            });
+               let url = Events.rootPath + (result.returnUrl || '/').substr(1);
+               window.location.href = url + '??Welcome ' + result.loginEmail + '!';
+             });
          } else {
             self.viewModelHelper.showErrors(errors());
          }

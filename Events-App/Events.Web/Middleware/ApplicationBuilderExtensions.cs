@@ -36,7 +36,7 @@ namespace Microsoft.AspNetCore.Builder
             });
         }
 
-        public async static Task InitialzieDatabase(this IApplicationBuilder app, IServiceProvider serviceProvider)
+        public static async Task InitialzieDatabase(this IApplicationBuilder app, IServiceProvider serviceProvider)
         {
             using (var scope = serviceProvider.CreateScope())
             {
@@ -45,7 +45,7 @@ namespace Microsoft.AspNetCore.Builder
                 var userManager = scopeService.GetRequiredService<UserManager<Account>>();
                 var context = scopeService.GetRequiredService<EventsDbContext>();
 
-                await DbInitializer.Initialize(userManager, context);
+               await DbInitializer.Initialize(userManager, context);
             }
         }
     }

@@ -1,0 +1,11 @@
+﻿.event-body {
+    width: 31%;
+    margin: 1%;
+    display: inline-block;
+}
+ul.event-details li {
+    padding: 2px 0;
+}
+.next-prev-section {
+    margin-top:35px !important;
+}

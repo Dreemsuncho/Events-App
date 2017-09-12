@@ -30,7 +30,7 @@ namespace Events.Web.Controllers
 
             var eventsRepository = _dataRepositoryFactory.GetRepository<EventsRepository>();
 
-            var events = eventsRepository.Get(e => e.IsPublic && e.StartDate >= date, page, _pageSize);
+            var events = eventsRepository.GetAllWithComments(e => e.IsPublic && e.StartDate >= date, page, _pageSize);
 
             if (events == null)
                 errors.Add("Cannot evaluate this operation");

@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading.Tasks;
+using System;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 
 using Xunit;
@@ -7,10 +11,6 @@ using Moq;
 using Events.Web.Controllers;
 using Events.Web.Core;
 using Events.Web.Models;
-using System.Threading.Tasks;
-using System;
-using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
 
 namespace Events.Web.Tests
 {

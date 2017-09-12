@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Events.Web.Core;
 using Events.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Events.Web.Controllers
 {
@@ -27,12 +28,13 @@ namespace Events.Web.Controllers
             return View(new LoginModel { ReturnUrl = returnUrl});
         }
 
+        [Authorize]
         [HttpGet("changepw")]
         public ActionResult ChangePassword()
         {
             return View();
         }
-            
+
         [HttpGet("logout")]
         public async Task<ActionResult> Logout()
         {

@@ -24,7 +24,7 @@ namespace Events.Web.Controllers
         {
             var eventsRepository = _dataRepositoryFactory.GetRepository<EventsRepository>();
             
-            var events = eventsRepository.Get(e => e.IsPublic && e.StartDate >= (date ?? new DateTime(1970, 01, 01)), page, _pageSize);
+            var events = eventsRepository.GetAllWithComments(e => e.IsPublic && e.StartDate >= (date ?? new DateTime(1970, 01, 01)), page, _pageSize);
 
             var model = new IndexModel
             {

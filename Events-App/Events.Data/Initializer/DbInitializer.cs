@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Identity;
-
+using System.Security.Claims;
 using Events.Data.Entities;
 using System;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +11,9 @@ namespace Events.Data
 {
     public static class DbInitializer
     {
-        public async static Task Initialize(UserManager<Account> userManager, EventsDbContext context)
+        public static async Task Initialize(UserManager<Account> userManager, EventsDbContext context)
         {
-            await context.Database.MigrateAsync();
+            context.Database.EnsureCreated();
 
             if (!await context.AccountSet.AnyAsync())
             {
@@ -32,9 +32,44 @@ namespace Events.Data
                     UserName = "el@abv.bg",
                     EmailConfirmed = true
                 };
-
                 await userManager.CreateAsync(adminAccount, "admin");
+                await userManager.AddClaimsAsync(adminAccount, new[] { new Claim("Admins", "Administrator"), new Claim("Users", "User") });
                 await userManager.CreateAsync(account, "123");
+                await userManager.AddClaimAsync(account, new Claim("Users", "User"));
+
+                var comments = new HashSet<Comment>
+                {
+                    new Comment { Author=account, Text = "This should be very cool event bro!" },
+                    new Comment { Author=account, Text = "I really thing this should be very cool" },
+                    new Comment { Author=account, Text = "This is fake comment from fake user"  },
+                    new Comment { Author=account, Text = "Whole life waiting for this battle" },
+                    new Comment { Author=account, Text = "I bet all the money that Mayweather will fall."  },
+                    new Comment { Author=account, Text = "Why should we write this comments, can not just have no comments?" },
+                    new Comment { Author=account, Text = "It's all about money, do not trust them"  },
+                    new Comment { Author=account, Text = "Simple mate I admire the use of hero and playfulness!" },
+                    new Comment { Author=account, Text = "This spaces has navigated right into my heart."},
+                    new Comment { Author=account, Text = "My 19 year old son rates this work very fabulous." },
+                    new Comment { Author=account, Text = "Let me take a nap... great illustration, anyway."},
+                    new Comment { Author=adminAccount, Text = "My 25 year old son rates this shot very sublime dude" },
+                    new Comment { Author=adminAccount, Text = "I want to learn this kind of lines! Teach me."},
+                    new Comment { Author=adminAccount, Text = "Whoa." },
+                    new Comment { Author=adminAccount, Text = "Such shot, many style, so cool"},
+                    new Comment { Author=adminAccount, Text = "I shold get this event" },
+                    new Comment { Author=adminAccount, Text = "This is sux why this event is dummy" },
+                    new Comment { Author=adminAccount, Text = "Because is very stupid american guys" },
+                    new Comment { Author=adminAccount, Text = "This should be very cool event bro!" },
+                    new Comment { Author=adminAccount, Text = "I really want to coming get this event" },
+                    new Comment { Author=adminAccount, Text = "This event has passed You can not go to a friend" },
+                    new Comment { Author=adminAccount, Text = "Why this event is so sux? Explain me" },
+                    new Comment { Author=adminAccount, Text = "Because is more fake than real event my friend :)" },
+                    new Comment { Text = "Just anonymous comment, never mind" },
+                    new Comment { Text = "Let me take a nap... great work, anyway." },
+                    new Comment { Text = "I'd love to see a video of how it works." },
+                    new Comment { Text = "I think I'm crying. It's that engaging." },
+                    new Comment { Text = "Good, friend. I adore the use of typography and button!" },
+                    new Comment { Text = "Mission accomplished. It's sublime." }
+                };
+
 
                 var events = new[]
                 {
@@ -77,11 +112,7 @@ namespace Events.Data
                         Duration = new TimeSpan(3,3,3),
                         Location = "Sofiq Town - Arena Armeec",
                         IsPublic = true,
-                        Comments = new HashSet<Comment>
-                        {
-                             new Comment{ Text = "This should be very cool event bro!", Author = account },
-                             new Comment{ Text = "I really thing this should be very cool", Author = adminAccount }
-                        }
+                        Comments = comments.Take(2).ToArray()
                     },
                     new Event
                     {
@@ -91,10 +122,7 @@ namespace Events.Data
                         StartDate = DateTime.Now.AddMonths(4),
                         Location = "United Kingdom House, Winsley Street",
                         IsPublic = true,
-                        Comments = new HashSet<Comment>
-                        {
-                            new Comment { Text = "This is fake comment from fake user" }
-                        }
+                        Comments = comments.Skip(2).Take(1).ToArray()
                     },
                     new Event
                     {
@@ -104,11 +132,7 @@ namespace Events.Data
                         Location = "Nevada 582, Paradise, NV, US",
                         StartDate = DateTime.Now.AddMonths(5),
                         IsPublic = true,
-                        Comments = new HashSet<Comment>
-                        {
-                            new Comment { Text = "Whole life waiting for this battle", Author = account },
-                            new Comment { Text = "I bet all the money that Mayweather will fall." }
-                        }
+                        Comments = comments.Skip(3).Take(2).ToArray()
                     },
                     new Event
                     {
@@ -118,10 +142,7 @@ namespace Events.Data
                         Location = "71 Pilgrim Avenue, MD 20815",
                         StartDate = DateTime.Now.AddMonths(6),
                         IsPublic = true,
-                        Comments = new HashSet<Comment>
-                        {
-                            new Comment { Text = "Why should we write this comments, can not just have no comments?" }
-                        }
+                        Comments = comments.Skip(5).Take(1).ToArray()
                     },
                     new Event
                     {
@@ -130,10 +151,7 @@ namespace Events.Data
                         Author = adminAccount,
                         Location = "4 Goldfield Rd.",
                         IsPublic = true,
-                        Comments = new HashSet<Comment>
-                        {
-                            new Comment { Text = "It's all about money, do not trust them" }
-                        }
+                        Comments = comments.Skip(6).Take(1).ToArray()
                     },
                     new Event
                     {
@@ -142,13 +160,7 @@ namespace Events.Data
                         Author = adminAccount,
                         Location = "5B Gillygate, Pontefract WF8 1PH, UK",
                         IsPublic = true,
-                        Comments = new HashSet<Comment>
-                        {
-                            new Comment { Text = "Simple mate I admire the use of hero and playfulness!", Author = account },
-                            new Comment { Text = "This spaces has navigated right into my heart.", Author = adminAccount},
-                            new Comment { Text = "My 19 year old son rates this work very fabulous.", Author = account },
-                            new Comment { Text = "Let me take a nap... great illustration, anyway.", Author = adminAccount}
-                        }
+                        Comments = comments.Skip(7).Take(4).ToArray()
                     },
                     new Event
                     {
@@ -157,13 +169,7 @@ namespace Events.Data
                         Author = adminAccount,
                         Location = "157-58 Fore St",
                         IsPublic = true,
-                        Comments = new HashSet<Comment>
-                        {
-                            new Comment { Text = "My 25 year old son rates this shot very sublime dude", Author = account },
-                            new Comment { Text = "I want to learn this kind of lines! Teach me.", Author = adminAccount},
-                            new Comment { Text = "Whoa.", Author = account },
-                            new Comment { Text = "Such shot, many style, so cool", Author = adminAccount}
-                        }
+                        Comments = comments.Skip(11).Take(4).ToArray()
                     },
                     new Event
                     {
@@ -173,12 +179,7 @@ namespace Events.Data
                         Duration = new TimeSpan(1, 1, 1),
                         Location = "NY 10163-4668, US",
                         IsPublic = true,
-                        Comments = new HashSet<Comment>
-                        {
-                            new Comment { Text = "I shold get this event" },
-                            new Comment { Text = "This is sux why this event is dummy" },
-                            new Comment { Text = "Because is very stupid american guys" }
-                        }
+                        Comments = comments.Skip(15).Take(3).ToArray()
                     },
                     new Event
                     {
@@ -188,12 +189,7 @@ namespace Events.Data
                         Duration = new TimeSpan(2,2,2),
                         Location = "Software university in bulgaria",
                         IsPublic = true,
-                        Comments = new HashSet<Comment>
-                        {
-                             new Comment{ Text = "This should be very cool event bro!" },
-                             new Comment{ Text = "I really want to coming get this event" },
-                             new Comment{ Text = "This event has passed You can not go to a friend", Author = adminAccount }
-                        }
+                        Comments = comments.Skip(18).Take(3).ToArray()
                     },
                     new Event
                     {
@@ -202,12 +198,7 @@ namespace Events.Data
                         Description = "John snow become programmer, the most exciting event ever isn't it?",
                         Location = "Winterfall",
                         IsPublic = true,
-                        Comments = new HashSet<Comment>
-                        {
-                            new Comment { Text = "Why this event is so sux? Explain me", Author = adminAccount },
-                            new Comment { Text = "Because is more fake than real event my friend :)", Author = account },
-                            new Comment { Text = "Just anonymous comment, never mind" }
-                        }
+                        Comments = comments.Skip(21).Take(3).ToArray()
                     },
                     new Event
                     {
@@ -216,14 +207,7 @@ namespace Events.Data
                         Description = "Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur.",
                         Location = "19A Broad Gap, Bodicote, Banbury OX15 4DE, UK",
                         IsPublic = true,
-                        Comments = new HashSet<Comment>
-                        {
-                            new Comment { Text = "Let me take a nap... great work, anyway.", Author = adminAccount },
-                            new Comment { Text = "I'd love to see a video of how it works.", Author = account },
-                            new Comment { Text = "I think I'm crying. It's that engaging." },
-                            new Comment { Text = "Good, friend. I adore the use of typography and button!" },
-                            new Comment { Text = "Mission accomplished. It's sublime." }
-                        }
+                        Comments = comments.Skip(24).Take(5).ToArray()
                     }
                 };
 

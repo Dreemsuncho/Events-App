@@ -10,6 +10,7 @@ namespace Events.Data.Helpers
         public int PageIndex { get; private set; }
         public int PageSize { get; private set; }
 
+        public PageList() { }
         public PageList(List<T> items, int count, int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;

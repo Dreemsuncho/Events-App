@@ -9,13 +9,13 @@ namespace Events.Data.Contracts
 {
     public interface IDataRepository { }
 
-    public interface IDataRepository<T> : IDataRepository where T : IEntity
+    public interface IDataRepository<IEntity> : IDataRepository where IEntity : class
     {
-        T Get(string id);
-        PageList<T> Get(Expression<Func<T, bool>> filter, int pageIndex, int pageSize);
-        IEnumerable<T> GetAll();
-        T Add(T entity);
-        T Update(T entity);
-        void Delete(T entity);
+        IEntity Get(Guid id);
+        IEnumerable<IEntity> GetAll();
+        IEnumerable<IEntity> GetAll(Expression<Func<IEntity, bool>> filter);
+        IEntity Add(IEntity entity);
+        IEntity Update(IEntity entity);
+        void Delete(IEntity entity);
     }
 }
