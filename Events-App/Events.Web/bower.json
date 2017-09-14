@@ -1,0 +1,51 @@
+{
+	"name": "events-web",
+	"description": "",
+	"main": "",
+	"authors": [
+		"Elvis Arabadjiyski <dreemsuncho@gmail.com>"
+	],
+	"license": "MIT",
+	"homepage": "https://github.com/Dreemsuncho/Events-App",
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"test",
+		"tests"
+	],
+	"dependencies": {
+		"jquery": "^3.2.1",
+		"font-awesome": "^4.7.0",
+		"jquery-ui": "^1.12.1",
+		"knockout": "^3.4.2",
+		"MDBootstrap": "^4.4.1",
+		"toastr": "^2.1.3",
+		"bootstrap-material-datetimepicker": "^2.7.1",
+		"knockout-validation": "^2.0.3"
+	},
+	"overrides": {
+		"font-awesome": {
+			"main": [
+				"less/font-awesome.less",
+				"css/font-awesome.min.css",
+				"scss/font-awesome.scss"
+			]
+		},
+		"MDBootstrap": {
+			"main": [
+				"js/mdb.min.js",
+				"js/popper.min.js",
+				"js/bootstrap.min.js",
+				"css/bootstrap.min.css",
+				"css/mdb.min.css"
+			]
+		},
+		"bootstrap-material-datetimepicker": {
+			"main": [ "js/bootstrap-material-datetimepicker.js" ]
+		},
+		"bootstrap-material-design": {
+			"main": []
+		}
+	}
+}

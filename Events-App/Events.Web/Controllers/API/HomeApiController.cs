@@ -8,6 +8,7 @@ using Events.Data.Contracts;
 using Events.Data.Repositories;
 using System.Linq.Expressions;
 using Events.Data.Entities;
+using System.Net;
 
 namespace Events.Web.Controllers
 {
@@ -28,7 +29,7 @@ namespace Events.Web.Controllers
 
             var errors = new List<string>();
 
-            var eventsRepository = _dataRepositoryFactory.GetRepository<EventsRepository>();
+            var eventsRepository = _dataRepositoryFactory.GetRepository<IEventsRepository>();
 
             var events = eventsRepository.GetAllWithComments(e => e.IsPublic && e.StartDate >= date, page, _pageSize);
 
@@ -36,9 +37,9 @@ namespace Events.Web.Controllers
                 errors.Add("Cannot evaluate this operation");
 
             if (!errors.Any())
-                response = Ok(events);
+                response = StatusCode((int)HttpStatusCode.OK, events);
             else
-                response = NotFound(errors);
+                response = StatusCode((int)HttpStatusCode.NotFound, errors);
 
             return response;
         }

@@ -19,10 +19,9 @@ namespace Events.Web.Controllers
             _dataRepositoryFactory = dataRepositoryFactory;
         }
 
-        [HttpGet]
         public ActionResult Index(DateTime? date, int page = 0)
         {
-            var eventsRepository = _dataRepositoryFactory.GetRepository<EventsRepository>();
+            var eventsRepository = _dataRepositoryFactory.GetRepository<IEventsRepository>();
             
             var events = eventsRepository.GetAllWithComments(e => e.IsPublic && e.StartDate >= (date ?? new DateTime(1970, 01, 01)), page, _pageSize);
 

@@ -35,6 +35,7 @@ namespace Events.Web.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpGet("logout")]
         public async Task<ActionResult> Logout()
         {

@@ -1,4 +1,4 @@
-﻿
+
 @inject SignInManager<Account> SignInManager
 @inject UserManager<Account> UserManager
 
@@ -16,8 +16,8 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle @(ViewBag.Name == "Account" ? "active" : "")" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
             <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
-              @if (!SignInManager.IsSignedIn(User))
-              {
+                @if (!SignInManager.IsSignedIn(User))
+                {
                     <a class="dropdown-item" asp-controller="Account" asp-action="Register">Register</a>
                     <a class="dropdown-item" asp-controller="Account" asp-action="Login">Login</a>
                     <div class="dropdown-divider"></div>
@@ -44,4 +44,16 @@
             </li>
         }
     </ul>
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <ul id="greet-bar" class="list-unstyled navbar draggable">
+            <li>
+    
+                <div style="background-color:#f4f4f4;" class="navbar">
+                    hello: @User.Identity.Name &nbsp;<a asp-controller="Account" asp-action="Logout" class="fa fa-sign-out red-text small" aria-hidden="true"></a>
+                </div>
+            </li>
+        </ul>
+    }
 </nav>

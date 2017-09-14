@@ -183,7 +183,9 @@
         padding: 0 1em 1em 1em;
         text-align: right;
     }
-
+.dtp-buttons button {
+    background-color: rgba(66, 133, 244, 0.83);
+}
     .dtp.hidden, .dtp .hidden {
         display: none;
     }

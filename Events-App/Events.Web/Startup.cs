@@ -29,8 +29,8 @@ namespace Events.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IDataRepositoryFactory, DataRepositoryFactory>();
-            services.AddTransient<EventsRepository>();
-            services.AddTransient<AccountRepository>();
+            services.AddTransient<IEventsRepository, EventsRepository>();
+            services.AddTransient<IAccountRepository, AccountRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

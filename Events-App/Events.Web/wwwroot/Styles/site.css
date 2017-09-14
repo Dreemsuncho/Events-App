@@ -14,6 +14,7 @@
 
 .wrapper {
     padding: 1% 5%;
+    padding-top:10%;
 }
 body {
     background-color: #f4f4f4;
@@ -33,4 +34,13 @@ body {
 }
 #top-bar{
     padding: 1%;
+}
+
+#greet-bar {
+    position: absolute;
+    right: 0px;
+    margin-right: 3%;
+    background-image: url("../Images/multi-emo.png");
+    background-repeat: repeat;
+    background-attachment: fixed;
 }

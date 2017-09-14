@@ -14,15 +14,16 @@
   
   <ItemGroup>
     <Content Include="Bindings\**\*" CopyToPublishDirectory="PreserveNewest" />
-    <Content Include="node_modules\**\*" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
   
   <ItemGroup>
+    <None Remove="Properties\PublishProfiles\el-ev - Web Deploy.pubxml" />
     <None Remove="Properties\PublishProfiles\elvis-events - Web Deploy.pubxml" />
   </ItemGroup>
   
   <ItemGroup>
     <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="wwwroot\bower\" />
   </ItemGroup>
   
 </Project>

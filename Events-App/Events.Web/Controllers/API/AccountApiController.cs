@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Events.Web.Core;
 using Events.Web.Models;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace Events.Web.Controllers
 {
@@ -22,6 +23,8 @@ namespace Events.Web.Controllers
         [HttpPost("register/validate1")]
         public ActionResult RegisterValidation1(RegisterModel model)
         {
+            ActionResult response = null;
+
             var errors = new List<string>();
 
             if (string.IsNullOrWhiteSpace(model.FirstName))
@@ -31,14 +34,18 @@ namespace Events.Web.Controllers
                 errors.Add("Invalid last name");
 
             if (errors.Any())
-                return BadRequest(errors);
+                response = StatusCode((int)HttpStatusCode.BadRequest, errors);
             else
-                return Ok();
+                response = StatusCode((int)HttpStatusCode.OK);
+
+            return response;
         }
 
         [HttpPost("register/validate2")]
         public async Task<ActionResult> RegisterValidation2(RegisterModel model)
         {
+            ActionResult response = null;
+
             var errors = new List<string>();
 
             if (string.IsNullOrWhiteSpace(model.LoginEmail))
@@ -57,30 +64,37 @@ namespace Events.Web.Controllers
                 errors.Add("Passwords do not match");
 
             if (errors.Any())
-                return BadRequest(errors);
+                response = StatusCode((int)HttpStatusCode.BadRequest, errors);
             else
-                return Ok();
+                response = StatusCode((int)HttpStatusCode.OK);
+
+            return response;
         }
 
         [HttpPost("register")]
         public async Task<ActionResult> Register(RegisterModel model)
         {
+            ActionResult response = null;
+
             bool registerSuccess = false;
 
-            if (RegisterValidation1(model) is OkResult &&
-                await RegisterValidation2(model) is OkResult)
-                registerSuccess = await _securityAdapter.Register(model.LoginEmail, model.FirstName, model.LastName, model.Password);
+            bool validationSuccess = RegisterValidation1(model) is StatusCodeResult &&
+                               await RegisterValidation2(model) is StatusCodeResult;
 
+            if (validationSuccess)
+                registerSuccess = await _securityAdapter.Register(model.LoginEmail, model.FirstName, model.LastName, model.Password);
 
             if (registerSuccess)
             {
                 await _securityAdapter.Login(model.LoginEmail, model.Password, model.RememberMe);
-                return Ok(model.LoginEmail);
+                response = StatusCode((int)HttpStatusCode.Created, model.LoginEmail);
             }
             else
             {
-                return BadRequest(new[] { "Unable to register user" });
+                response = StatusCode((int)HttpStatusCode.BadRequest, new List<string> { "Unable to register user" });
             }
+
+            return response;
         }
 
         [HttpPost("login")]
@@ -109,9 +123,9 @@ namespace Events.Web.Controllers
                 loginSuccess = await _securityAdapter.Login(model.LoginEmail, model.Password, model.RememberMe);
 
             if (loginSuccess)
-                response = Ok(new { model.LoginEmail, model.ReturnUrl });
+                response = StatusCode((int)HttpStatusCode.OK, new { model.LoginEmail, model.ReturnUrl });
             else
-                response = BadRequest(errors);
+                response = StatusCode((int)HttpStatusCode.BadRequest, errors);
 
             return response;
         }
@@ -119,6 +133,8 @@ namespace Events.Web.Controllers
         [HttpPost("chpassword")]
         public async Task<ActionResult> ChangePassword(ChangePasswordModel model)
         {
+            ActionResult response = null;
+
             var errors = new List<string>();
 
             if (!await _securityAdapter.CheckPassword(User.Identity.Name, model.OldPassword))
@@ -136,9 +152,11 @@ namespace Events.Web.Controllers
                 changePasswordSuccess = await _securityAdapter.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
 
             if (changePasswordSuccess)
-                return Ok();
+                response = StatusCode((int)HttpStatusCode.OK);
             else
-                return BadRequest(errors);
+                response = StatusCode((int)HttpStatusCode.BadRequest, errors);
+
+            return response;
         }
     }
 }
