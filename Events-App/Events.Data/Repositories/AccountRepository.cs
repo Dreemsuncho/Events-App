@@ -1,13 +1,10 @@
-﻿using Events.Data.Contracts;
+﻿using System.Linq;
+using Events.Data.Contracts;
 using Events.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Events.Data.Repositories
 {
-    public class AccountRepository : DataRepository<Account>, IDataRepository
+    public class AccountRepository : DataRepository<Account>, IAccountRepository, IDataRepository
     {
         public AccountRepository() { }
         public AccountRepository(EventsDbContext context) : base(context)

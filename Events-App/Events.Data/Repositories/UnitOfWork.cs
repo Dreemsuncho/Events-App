@@ -16,12 +16,12 @@ namespace Events.Data.Repositories
             _dataRepositoryFactory = dataRepositoryFactory;
         }
 
-        public EventsRepository EventsRepository
+        public IEventsRepository EventsRepository
         {
             get { return new EventsRepository(_context); }
         }
 
-        public AccountRepository AccountRepository
+        public IAccountRepository AccountRepository
         {
             get { return new AccountRepository(_context); }
         }

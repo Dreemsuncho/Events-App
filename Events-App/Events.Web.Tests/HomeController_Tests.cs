@@ -22,8 +22,8 @@ namespace Events.Web.Tests
             var repositoryFactory = new Mock<IDataRepositoryFactory>();
             var controller = new HomeController(repositoryFactory.Object);
 
-            var repository = new Mock<EventsRepository>();
-            repositoryFactory.Setup(x => x.GetRepository<EventsRepository>()).Returns(repository.Object);
+            var repository = new Mock<IEventsRepository>();
+            repositoryFactory.Setup(x => x.GetRepository<IEventsRepository>()).Returns(repository.Object);
 
             // Act
             var result = controller.Index(null);
@@ -47,11 +47,11 @@ namespace Events.Web.Tests
             var repositoryFactory = new Mock<IDataRepositoryFactory>();
             var controller = new HomeController(repositoryFactory.Object);
 
-            var repository = new Mock<EventsRepository>();
+            var repository = new Mock<IEventsRepository>();
 
             var events = new[] { new Event() };
             repository.Setup(x => x.GetAllWithComments(It.IsAny<Expression<Func<Event, bool>>>(), It.IsAny<int>(), It.IsAny<int>())).Returns(events);
-            repositoryFactory.Setup(x => x.GetRepository<EventsRepository>()).Returns(repository.Object);
+            repositoryFactory.Setup(x => x.GetRepository<IEventsRepository>()).Returns(repository.Object);
 
             // Act
             var result = controller.Index(null, 1);

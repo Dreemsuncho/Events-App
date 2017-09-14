@@ -10,6 +10,7 @@ using Events.Data.Contracts;
 using Events.Data.Entities;
 using Events.Data.Repositories;
 using Events.Web.Controllers;
+using System.Net;
 
 namespace Events.Web.Tests
 {
@@ -24,17 +25,23 @@ namespace Events.Web.Tests
 
             var queryDate = new DateTime();
 
-            repositoryFactory.Setup(x => x.GetRepository<EventsRepository>()).Returns(new Mock<EventsRepository>().Object);
+            repositoryFactory.Setup(x => x.GetRepository<IEventsRepository>()).Returns(new Mock<IEventsRepository>().Object);
 
             // Act
             var result = controller.Index(queryDate, 0);
 
             // Assert
-            Assert.IsType<OkObjectResult>(result);
+            Assert.IsType<ObjectResult>(result);
 
-            var okObject = result as OkObjectResult;
+            var objectResult = result as ObjectResult;
 
-            Assert.IsType<List<Event>>(okObject.Value);
+            Assert.True(objectResult.StatusCode == (int)HttpStatusCode.OK);
+
+            Assert.IsType<List<Event>>(objectResult.Value);
+
+            var events = objectResult.Value as List<Event>;
+
+            Assert.True(events.Count == 0);
         }
 
         [Fact]
@@ -46,23 +53,25 @@ namespace Events.Web.Tests
 
             var queryDate = new DateTime();
 
-            var repository = new Mock<EventsRepository>();
+            var repository = new Mock<IEventsRepository>();
             var events = new List<Event> { new Event() };
 
             repository.Setup(x => x.GetAllWithComments(It.IsAny<Expression<Func<Event, bool>>>(), It.IsAny<int>(), It.IsAny<int>())).Returns(events);
-            repositoryFactory.Setup(x => x.GetRepository<EventsRepository>()).Returns(repository.Object);
+            repositoryFactory.Setup(x => x.GetRepository<IEventsRepository>()).Returns(repository.Object);
 
             // Act
             var result = controller.Index(queryDate, 0);
 
             // Assert
-            Assert.IsType<OkObjectResult>(result);
+            Assert.IsType<ObjectResult>(result);
 
-            var okObject = result as OkObjectResult;
+            var objectResult = result as ObjectResult;
 
-            Assert.IsType<List<Event>>(okObject.Value);
+            Assert.True(objectResult.StatusCode == (int)HttpStatusCode.OK);
 
-            Assert.Same(events, okObject.Value);
+            Assert.IsType<List<Event>>(objectResult.Value);
+
+            Assert.Same(events, objectResult.Value);
         }
     }
 }

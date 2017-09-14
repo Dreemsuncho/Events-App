@@ -7,8 +7,8 @@ namespace Events.Data.Contracts
 {
     public interface IUnitOfWork
     {
-        EventsRepository EventsRepository { get; }
-        AccountRepository AccountRepository { get; }
+        IEventsRepository EventsRepository { get; }
+        IAccountRepository AccountRepository { get; }
         int Commit();
     }
 }

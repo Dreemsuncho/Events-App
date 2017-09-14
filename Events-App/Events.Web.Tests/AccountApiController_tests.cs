@@ -11,6 +11,7 @@ using Moq;
 using Events.Web.Controllers;
 using Events.Web.Core;
 using Events.Web.Models;
+using System.Net;
 
 namespace Events.Web.Tests
 {
@@ -43,7 +44,11 @@ namespace Events.Web.Tests
             var result = await controller.Login(model);
 
             // Assert
-            Assert.IsType<OkObjectResult>(result);
+            Assert.IsType<ObjectResult>(result);
+
+            ObjectResult objectResult = result as ObjectResult;
+
+            Assert.True(objectResult.StatusCode == (int)HttpStatusCode.OK);
 
             securityAdapter.Verify(x => x.UserExists(model.LoginEmail), Times.Once);
             securityAdapter.Verify(x => x.CheckPassword(model.LoginEmail, model.Password), Times.Once);
@@ -63,12 +68,15 @@ namespace Events.Web.Tests
             var result = await controller.Login(model);
 
             // Assert
-            Assert.IsType<BadRequestObjectResult>(result);
+            Assert.IsType<ObjectResult>(result);
 
             var objectResult = result as ObjectResult;
-            var errors = objectResult.Value as ICollection<string>;
 
-            Assert.NotNull(errors);
+            Assert.True(objectResult.StatusCode == (int)HttpStatusCode.BadRequest);
+
+            Assert.IsType<List<string>>(objectResult.Value);
+
+            var errors = objectResult.Value as List<string>;
 
             Assert.True(errors.Count == 4);
         }
@@ -98,7 +106,13 @@ namespace Events.Web.Tests
             var result = await controller.Register(model);
 
             // Assert
-            Assert.IsType<OkObjectResult>(result);
+            Assert.IsType<ObjectResult>(result);
+
+            ObjectResult objectResult = result as ObjectResult;
+
+            Assert.True(objectResult.StatusCode == (int)HttpStatusCode.Created);
+
+            Assert.Same(model.LoginEmail, objectResult.Value);
 
             securityAdapter.Verify(x => x.UserExists(model.LoginEmail), Times.Once);
             securityAdapter.Verify(x => x.Register(model.LoginEmail, model.FirstName, model.LastName, model.Password), Times.Once);
@@ -125,12 +139,15 @@ namespace Events.Web.Tests
             var result = await controller.Register(model);
 
             // Assert
-            Assert.IsType<BadRequestObjectResult>(result);
+            Assert.IsType<ObjectResult>(result);
 
             var objectResult = result as ObjectResult;
-            var errors = objectResult.Value as ICollection<string>;
 
-            Assert.NotNull(errors);
+            Assert.True(objectResult.StatusCode == (int)HttpStatusCode.BadRequest);
+
+            Assert.IsType<List<string>>(objectResult.Value);
+
+            var errors = objectResult.Value as List<string>;
 
             Assert.True(errors.Count == 1);
         }
@@ -164,7 +181,7 @@ namespace Events.Web.Tests
             var result = await controller.ChangePassword(model);
 
             // Assert
-            Assert.IsType<OkResult>(result);
+            Assert.IsType<StatusCodeResult>(result);
 
             securityAdapter.Verify(x => x.CheckPassword(userIdentity.Name, model.OldPassword), Times.Once);
             securityAdapter.Verify(x => x.ChangePassword(userIdentity.Name, model.OldPassword, model.NewPassword), Times.Once);
@@ -189,7 +206,19 @@ namespace Events.Web.Tests
             var result = await controller.ChangePassword(new ChangePasswordModel());
 
             // Assert
-            Assert.IsType<BadRequestObjectResult>(result);
+            Assert.IsType<ObjectResult>(result);
+
+            ObjectResult objectResult = result as ObjectResult;
+
+            Assert.True(objectResult.StatusCode == (int)HttpStatusCode.BadRequest);
+
+            Assert.IsType<List<string>>(objectResult.Value);
+
+            var errors = objectResult.Value as List<string>;
+
+            Assert.True(errors.Count > 0);
+
+            securityAdapter.Verify(x => x.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
     }
 }

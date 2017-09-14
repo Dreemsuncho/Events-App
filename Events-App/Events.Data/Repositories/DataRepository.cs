@@ -9,7 +9,7 @@ using Events.Data.Entities;
 
 namespace Events.Data.Repositories
 {
-    public abstract class DataRepository<IEntity> : IDataRepository<IEntity> where IEntity : class
+    public abstract class DataRepository<IEntity> : IDataRepository<IEntity>, IDataRepository where IEntity : class
     {
         protected readonly EventsDbContext _context;
 

@@ -10,12 +10,12 @@ using Events.Data.Helpers;
 
 namespace Events.Data.Repositories
 {
-    public class EventsRepository : DataRepository<Event>, IDataRepository
+    public class EventsRepository : DataRepository<Event>, IEventsRepository, IDataRepository
     {
         public EventsRepository() { }
         public EventsRepository(EventsDbContext context) : base(context) { }
 
-        public virtual IEnumerable<Event> GetAllWithComments(Expression<Func<Event, bool>> filter, int pageIndex, int pageSize)
+        public IEnumerable<Event> GetAllWithComments(Expression<Func<Event, bool>> filter, int pageIndex, int pageSize)
         {
             var events = _context.EventSet
                 .Include(e => e.Author)
